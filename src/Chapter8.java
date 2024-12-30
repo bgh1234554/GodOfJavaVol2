@@ -1,8 +1,9 @@
 import java.io.*;
-import java.util.Date;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class Chapter8 {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NullPointerException {
         /*
             Input/Output 햇갈릴때는 JVM을 기준으로 생각하면 편하다.
             스트림 - 끊기지 않는 연속적인 데이터.
@@ -70,9 +71,76 @@ public class Chapter8 {
         for(File filetmp : filelist3){
             System.out.println(filetmp.getName());
         }
+
         //JAVA7 이후에 추가된 Files 클래스가 더 편리하다. 나중에 배울 예정.
 
+        /*
+        InputStream - FileInputStream, ObjectInputStream, FilterInputStream을 많이 사용
+        FilterInputStream은 생성자가 protected라 자식 클래스를 통해서만 생성이 가능한데, 주로
+        BufferedInputStream과 DataInputStream을 많이 사용한다.
+
+        OutputStream도 동일한 종류의 클래스를 주로 사용하는데 flush() 메서드가 있다.
+        대부분 저장할때 buffer을 가지고, 데이터를 쌓아두었다가 한번에 저장하는데,
+        flush()는 새로운 내용을 기다리지 말고 지금 바로 저장하라고 호출하는 메서드다.
+
+        둘 다 쓰고 난 뒤에는 꼭 close()를 해줘야한다.
+        하지만, 보통 웹 개발을 할때는 Stream쪽보단 Reader와 Writer을 많이 사용한다.
+         */
+        /*
+        파일에 글을 쓸 때 FileWriter 클래스를 쓰면 메서드를 호출할 때마다 파일에 쓰기 때문에 비효율적이다.
+        따라서 단점을 보완하기 위해 BufferedWriter 클래스를 대개 이용한다.
+        FileWriter 객체 생성시 IOException이 발생하는 경우
+        1. 파일 이름이 파일이 아닌 경로인 경우
+        2. 파일이 존재하지 않는데, 권한 문제로 생성할 수 없는 경우
+        3. 파일이 존재하지만, 파일을 열 수 없는 경우.
+
+        자세한 예제는 Recap 안에 있는 StreamEx와 StreamEx2.java를 보기.
+
+        BufferedReader와 BufferedWriter을 사용해 파일을 읽고, 파일에 쓸 수 있으나, Scanner 클래스를 사용할 수도 있다.
+         */
+        File fileScan = new File("\\Users\\MSI\\Desktop\\나무위키.txt");
+        Scanner scanner = new Scanner(fileScan);
+        while(scanner.hasNextLine()) System.out.println(scanner.nextLine());
+        scanner.close(); //각 메서드의 역할은 이름 그대로임.
+
+        //특정 폴더의 크기 출력하는 메서드 예제
+        //kb, mb, gb 등을 크기에 맞게 출력하기 위한 convertFileLength 메서드도 만든다.
+        String path = "C:\\GodofJava";
+        long sum = printFileSize(path);
+        System.out.println(path+"'s total size="+convertFileLength(sum));
     }
+
+    private static long printFileSize(String path) {
+        File file = new File(path);
+        long sum = 0;
+        if(file.isDirectory()){
+            File[] files = file.listFiles();
+            for(File filetmp:files){
+                if(filetmp.isFile()){
+                    long size = filetmp.length();
+                    //System.out.println(filetmp+"="+convertFileLength(size));
+                    sum+=size;
+                }
+                else{
+                    long size = printFileSize(filetmp.getAbsolutePath());
+                    System.out.println(filetmp+"="+convertFileLength(size));
+                    sum+=size;
+                }
+            }
+        }
+        return sum;
+    }
+
+    private static String convertFileLength(long size) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        if(size<=1024){
+            return df.format(1.0*size)+" b";
+        }
+        else if(size>=1024+1&&size<=1024*1024) return df.format(1.0*size/1024)+" kb";
+        else if(size>=1024*1024+1&&size<=1024*1024*1024) return df.format(1.0*size/(1024*1024))+" mb";
+        else return df.format(1.0*size/(1024*1024*1024))+" gb";
+    }
+
     static class PNGJPGFileFilter implements FileFilter{
         @Override
         public boolean accept(File pathname) {
