@@ -95,6 +95,7 @@ public class Chapter8 {
         3. 파일이 존재하지만, 파일을 열 수 없는 경우.
 
         자세한 예제는 Recap 안에 있는 StreamEx와 StreamEx2.java를 보기.
+        FileWriter(filename,true)라고 적을 시 뒤에 append가 되는 효과가 있다.
 
         BufferedReader와 BufferedWriter을 사용해 파일을 읽고, 파일에 쓸 수 있으나, Scanner 클래스를 사용할 수도 있다.
          */
@@ -136,8 +137,8 @@ public class Chapter8 {
         if(size<=1024){
             return df.format(1.0*size)+" b";
         }
-        else if(size>=1024+1&&size<=1024*1024) return df.format(1.0*size/1024)+" kb";
-        else if(size>=1024*1024+1&&size<=1024*1024*1024) return df.format(1.0*size/(1024*1024))+" mb";
+        else if(size<=1024*1024) return df.format(1.0*size/1024)+" kb";
+        else if(size<=1024*1024*1024) return df.format(1.0*size/(1024*1024))+" mb";
         else return df.format(1.0*size/(1024*1024*1024))+" gb";
     }
 
