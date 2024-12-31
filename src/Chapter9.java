@@ -1,7 +1,6 @@
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.*;
 
 class SerialDTO implements Serializable{
     private String Bookname;
@@ -66,14 +65,15 @@ public class Chapter9 {
         //데이터가 담긴 buffer을 전달해 Channel을 통해 쓰기.
         String filename = "\\GodofJava\\text\\nio.txt";
         String data="My First NIO text file";
-        FileOutputStream fileInputStream = new FileOutputStream(filename);
-        FileChannel channel = fileInputStream.getChannel(); //Channel 객체 생성
+        FileOutputStream fileOutputStream = new FileOutputStream(filename);
+        FileChannel channel = fileOutputStream.getChannel(); //Channel 객체 생성
         byte[] byteData=data.getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(byteData); //ByteBuffer 객체 생성. wrap에 저장할 byte의 배열을 넘겨준다.
         channel.write(buffer); channel.close();
         //데이터를 담을 buffer를 알려줘서 Channel을 통해 읽어오기.
         FileChannel channelo = new FileInputStream(filename).getChannel();
         ByteBuffer buffero = ByteBuffer.allocate(1024); //데이터를 저장할 공간의 크기.
+        //IntBuffer, CharBuffer, DoubleBuffer 등이 존재한다.
         channelo.read(buffero); //데이터를 이 버퍼에다 담으라고 알려준다.
         buffero.flip(); //다 담고 시작 위치로 이동.
         while(buffer.hasRemaining()) System.out.println((char)buffero.get());
