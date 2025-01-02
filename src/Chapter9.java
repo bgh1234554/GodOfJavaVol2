@@ -71,14 +71,15 @@ public class Chapter9 {
         ByteBuffer buffer = ByteBuffer.wrap(byteData); //ByteBuffer 객체 생성. wrap에 저장할 byte의 배열을 넘겨준다.
         channel.write(buffer); channel.close();
         //데이터를 담을 buffer를 알려줘서 Channel을 통해 읽어오기.
-        FileChannel channelo = new FileInputStream(filename).getChannel();
+
+        FileChannel channel2 = new FileInputStream(filename).getChannel();
         ByteBuffer buffero = ByteBuffer.allocate(1024); //데이터를 저장할 공간의 크기.
         //IntBuffer, CharBuffer, DoubleBuffer 등이 존재한다.
-        channelo.read(buffero); //데이터를 이 버퍼에다 담으라고 알려준다.
+        channel2.read(buffero); //데이터를 이 버퍼에다 담으라고 알려준다.
         buffero.flip(); //다 담고 시작 위치로 이동.
         while(buffer.hasRemaining()) System.out.println((char)buffero.get());
         //남은 데이터가 있을 동안 계속해서 데이터를 찍어낸다.
-        channelo.close();
+        channel2.close();
         /*
         Channel - getChannel로 객체 생성후 read와 write메서드에 버퍼만 담아서 주면 된다.
         Buffer가 좀 복잡하다. - CD처럼 위치가 있어서 버퍼에 읽거나 쓰는 작업을 수행하면 위치가 이동된다.
