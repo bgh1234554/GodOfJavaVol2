@@ -1,9 +1,6 @@
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,11 +71,38 @@ public class Chapter13 {
         checkPath2(dir1,dir2);
         /*
         Files 클래스 - 기존의 File 클래스보다 훨씬 더 많은 메서드를 제공하며, static 메서드라 객체 생성 필요 없음.
-        copy(), move(), delete(), createFile(), readAllLines(), write() 등등이 존재한다.
+        copy(), move(), delete(), createFile(), createDirectories(), readAllLines(), write(), exists() 등등이 존재한다.
          */
         Path path = Paths.get("C:\\GodofJava\\FilesTest.txt");
         writeFile(path); readFile(path);
+        copyMoveDelete(path);
     }
+
+    private static void copyMoveDelete(Path path) throws IOException {
+        Path toPath = path.getParent(); //부모 폴더의 경로
+        Path copyPath = toPath.resolve("copied"); //이렇게 해도 생성 안됨.
+        if(!Files.exists(copyPath)){
+            Files.createDirectories(copyPath); //폴더 생성
+        }
+
+        Path copiedFile = copyPath.resolve("copied.txt");
+        StandardCopyOption standardCopyOption = StandardCopyOption.REPLACE_EXISTING;
+        //기존에 파일이 있으면 덮어쓰기
+        Files.copy(path,copiedFile,standardCopyOption);
+
+        System.out.println("COPIED SUCCESSFULLY");
+        readFile(copiedFile);
+
+        // Move File. Files 클래스의 move 메서드는 파일을 옮기고 새 파일 경로를 리턴한다.
+        //move(소스 파일, 옮길 경로, 옵션)
+        Path movedFile = Files.move(copiedFile,toPath.resolve("moved.txt"),standardCopyOption);
+
+        //Delete File 그냥 delete 메서드 안에 Path 클래스를 넣으면 된다.
+        Files.delete(movedFile);
+        //이 외에도 Files 클래스에는 createTempDirectory(), createTmpFile() 등의 메서드도 존재한다.
+        //더 자세한 것은 API 문서 참조.
+    }
+
     public static void calculate(){
         long from = 1; long to = 10;
         GetSum sum = new GetSum(from,to);
