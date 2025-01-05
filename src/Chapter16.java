@@ -51,5 +51,35 @@ public class Chapter16 {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+        /*
+        JAVA 모듈 관련 설명 - 모듈화/직소 프로젝트
+        패키지 최상단에 module-info.java가 존재해야한다. 다른 이름으론 사용할 수 없다.
+        module Module1{ //여기서의 모듈 이름은 알아서 정할 수 있다.
+            exports java9.module1; //외부에서 이 모듈을 가져다 쓸때, java9.module1만 직접적으로 사용할 수 있다.
+            //모듈은 인텔리제이 기준 폴더 우하단에 파란색 네모가 있는 것이 모듈. 패키지가 모여있는 것.
+        }
+        예를들어, java9 패키지 안에 module0와 module1 패키지가 있을 때, module1은 module0을 import해서
+        사용할 수 있지만, 다른 모듈에서 이 모듈에 있는 코드를 사용할 때에는 module0에 있는 코드를 직접적으로
+        사용할 수 없고, module1이 module0을 import해서 구현한 코드를 이용해 간접적으로만 사용할 수 있다.
+        다른 모듈에서 해당 모듈의 중요 로직과 소스 코드를 직접적으로 사용하지 못하게 막을 수 있다는 장점이 있다.
+        다른 모듈에서 해당 모듈의 코드를 사용하고 싶을 때는
+        module Module2{
+            requires Module1;
+        }
+        과 같은 방식으로 module-info.java를 패키지 최상단 폴더에 구현해야 한다.
+
+        최종적인 구조는 이와 같다.
+        ├───Module1
+        │   └───src
+        │       ├───java9
+        │       │   ├───module0 //패키지 명.
+        │       │   └───module1
+        │       └───module-info.java //exports java9.module1;
+        └───Module2
+            └───src
+                └───java9
+                │   ├───module2
+                └───module-info.java //requires Module1
+         */
     }
 }

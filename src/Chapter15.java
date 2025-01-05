@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -101,5 +102,13 @@ public class Chapter15 {
         studentDTOList.stream().filter(student->student.getAge()>=24)
                 .forEach(student->System.out.println(student.getName()+":"+student.getScoreEnglish()));
         //스트림은 코드가 간결해지는 분명한 장점이 있으므로 알아두면 좋다.
+        /*
+        Functional 패키지의 Predicate 인터페이스. 두 객체를 비교할 수 있으며, boolean을 리턴하는 test메서드도 가지고 있다.
+        and(), or(), negate()와 같은 논리 연산도 제공하고 있다.
+         */
+        Predicate<String> predicateLength = (a)->a.length()>5;
+        Predicate<String> predicateContainsGod = (a)->a.contains("God");
+        String s1 = "GodofJava";
+        System.out.println(predicateLength.and(predicateContainsGod).test(s1));
     }
 }
